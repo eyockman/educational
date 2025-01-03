@@ -5,7 +5,7 @@ code to share with students and friends!
 
 **test.R** = beginner code to show how to make a boxplot and do a basic ANOVA
 
-**survcurv.R** = some code walking through survival curves with Kaplan-Meier curve and Cox Proportional Hazard model examples. The descriptions and explanations aren't great on this one, I'm still working on it. Most of the code is sourced from statology (self note: find link and cite properly).
+**survcurv.R** = some code walking through survival curves with Kaplan-Meier curve and Cox Proportional Hazard model examples. The descriptions and explanations aren't great on this one, I'm still working on it. following RStudio Blog tutorial by Joseph Rickert https://rviews.rstudio.com/2017/09/25/survival-analysis-with-r/
 
 **vision.R** = initial exploration of the retinopathy dataset in the survival package. prep for a survival curve mini workshop I gave to ESNERR staff. Comments pretty in depth.
 
