@@ -1,7 +1,7 @@
-# educational
-code to share with students and friends!
+# educational 𓇼 ୭⋆｡˚ 𓆝⋆｡ *ੈ✩
+𓇢𓆸˚code to share with students and friends! 
 
-FOLDERS:
+FOLDERS ❀
 
 - **BIOE107** = code from UCSC BIOE107 course I am TAing; code written by A. Marm Kilpatrick
 
@@ -10,7 +10,7 @@ FOLDERS:
 - **NorrisCenter** = data from CCH2; planning to use for collection summary statistics 
 
 
-UNSORTED FILES:
+UNSORTED FILES ❀
 
 - **test.csv** = made up data set showing some made up heights of 3 different species (clarkia, raphanus, trifolium) to use in test.R
 
@@ -26,7 +26,7 @@ UNSORTED FILES:
 
 - **educational.Rproj** = I think this is just my workspace snapshot, probably not needed for anyone downloading code
 
-Other Great R Resources:
+Other Great R Resources ❀
 - https://www.statology.org/
 - https://rforcats.net/
 - ScRubs (UCSC folks only: see EEB email listservs)
