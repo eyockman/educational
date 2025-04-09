@@ -12,7 +12,7 @@ FOLDERS ❀
 
 UNSORTED FILES ❀
 
-- **test.csv** = made up data set showing some made up heights of 3 different species (clarkia, raphanus, trifolium) to use in test.R
+- **test.csv** = made up data set showing some made up heights of 3 different genera (clarkia, raphanus, trifolium) to use in test.R
 
 - **test.R** = beginner code to show how to make a boxplot and do a basic ANOVA
 
