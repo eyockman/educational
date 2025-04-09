@@ -25,3 +25,10 @@ UNSORTED FILES:
 - **randomdata.R** = randomly generated scatterplot; originally made to use as a visual aid but is quick reference for how to randomly generate some simple data
 
 - **educational.Rproj** = I think this is just my workspace snapshot, probably not needed for anyone downloading code
+
+Other Great R Resources:
+- https://www.statology.org/
+- https://rforcats.net/
+- ScRubs (UCSC folks only: see EEB email listservs)
+- R cheatsheets (you can find these when you search for specific packages; e.g. dplyr, ggplot2)
+- Greg Gilbert's Site: https://greggilbertlab.sites.ucsc.edu/teaching/rtransition/
