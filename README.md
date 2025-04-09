@@ -1,12 +1,14 @@
 # educational
 code to share with students and friends!
 
-FOLDERSr
+FOLDERS
+
 **BIOE107** = code from UCSC BIOE107 course I am TAing; code written by A. Marm Kilpatrick
 **lit review** = data downloaded from Web of Science search when I was looking for publications mentioning competition and facilitation in Ecology; makes a nice plot
 **NorrisCenter** = data from CCH2; planning to use for collection summary statistics 
 
 FILES
+
 **test.csv** = made up data set showing some made up heights of 3 different species (clarkia, raphanus, trifolium) to use in test.R
 
 **test.R** = beginner code to show how to make a boxplot and do a basic ANOVA
