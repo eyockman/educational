@@ -35,7 +35,7 @@ r1=lm(Temp_C~CO2_ppm,data=dat) #same format as above… run a linear model of te
 abline(r1) # linearity
 shapiro.test(residuals(r1)) # normality
 plot(residuals(r1)~predict(r1)) # homoscedasticity; eyeball test
-library(lmtest); bptest(fit) #P-values <0.05 indicate non-constant variance (heteroskedasticity) # homoscedasticity; math test
+library(lmtest); bptest(r1) #P-values <0.05 indicate non-constant variance (heteroskedasticity) # homoscedasticity; math test
 pacf(residuals(r1)) # independence
 
 # 3 ----
