@@ -14,116 +14,18 @@ setwd("~/Documents/Coding/educational/NorrisCenter/Apr8norriscentersnapshot")
 # occurrences.csv = all specimens, all info
 
 # data sets I care about right now (i think they are all related tbh...)
-ids=read_csv("identifications.csv") # maybe don't use this, i think some specimens are double counted bc ID updates and such?
 ims=read_csv("multimedia.csv") # only has some... bc not all imaged?
 dat=read_csv("occurrences.csv") # warning; I think this is all raw data of every occurence
 
 # shared info across all datasets:
 ## coreid = symbiota's unique identifier (dat has "id" which i think is coreid)
-length(intersect(colnames(ids), colnames(ims))) # only share coreid
 length(intersect(colnames(ims), colnames(dat))) # nothing shared... (id is coreid?)
-length(intersect(colnames(ids), colnames(dat))) # 13 column names in common... which ones?
-intersect(colnames(ids), colnames(dat))
 
-head(dat %>% select(id, genus, specificEpithet, taxonRank, infraspecificEpithet, recordID, modified))
-head(ids %>% select(coreid, genus, specificEpithet, taxonRank, infraspecificEpithet, recordID, modified))
-# recordID and modified are NOT the same, just have same column name in dat and ids
-# id and coreid are the same i think
+head(dat %>% select(id, genus, specificEpithet, taxonRank, infraspecificEpithet, recordID, modified), 10)
 
-
-# TAXON IDENTIFICATIONS ====
-head(ids)
-# this is just species identification, changes to taxa, or id updates and sources
-colnames(ids)
-length(unique(ids$coreid)) # 15606 specimens in here?
-length(unique(ids$recordID)) # 16193 unique records.... so some have same coreID....? Al says this is double counting barcodes/unlinked images/etc
-length(unique(ids$scientificName)) # 3668 species
-length(unique(ids$genus)) # 830 genera
-
-ggplot(ids, aes(x=modified))+
-  geom_density(col="darkgreen")+
-  theme_few()+
-  theme(legend.position = "none")+
-  labs(x="When IDENTIFICATION last updated", y="Specimens")+
-  scale_y_continuous(labels = comma)
-  # all the IDs happened in 2023 it seems
-
-nrow(ids) # 16193 specimens
-
-g = ids %>% 
-  group_by(genus) %>% 
-  summarize(N=n(), # how many specimens of each genera do we have
-            prop=N/16193) # what proportion of our entire collection is that?
-
-nrow(g) # 830 genera
-head(g)
-g2 = g %>% filter(N > 100) %>% na.omit()
-
-palette1 = c("Arctostaphylos" = "#621B00",
-             "Lupinus" = "#14248A",
-             "Quercus" = "#99C1B9",
-             "Trifolium" = "#D4C2FC")
-
-ggplot(g, aes(x="", y=prop, fill=genus)) +
-  geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+
-  theme_void()+theme(legend.position = "none")+
-  #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
-  scale_fill_manual(values=palette1)
-# ones I care about in this data set - genus, modified, identifiedBy, dateIdentified?
-sum(g$prop) # should be 1?
-sum(g2$prop) # genera w > 100 specimens are 26% of collection
-length(unique(g2$genus)) # theres 22 of them
-unique(g2$genus)
-
-palette2 = c("Acmispon" = "grey90",
-             "Agrostis" = "grey80",
-             "Arctostaphylos" = "#621B00",
-             "Bromus" = "grey90",
-             "Carex" = "grey80",
-             "Castilleja" = "grey90",
-             "Ceanothus" = "grey80",
-             "Chorizanthe" = "grey90",
-             "Eriogonum" = "grey80",
-             "Gilia" = "grey90",
-             "Juncus" = "grey80",
-             "Lupinus" = "#14248A",
-             "Mimulus" = "grey90",
-             "Nemophila" = "grey80",
-             "Oxalis" = "grey90",
-             "Phacelia" = "grey80",
-             "Piperia" = "grey90",
-             "Plagiobothrys" = "grey80",
-             "Plantago" = "grey90",
-             "Quercus" = "#99C1B9",
-             "Stachys" = "grey90",
-             "Trifolium" = "#D4C2FC") # palette for genera with 100+ specimens
-
-ggplot(g2, aes(x=genus, y=N, fill=genus))+
-  geom_col()+
-  #scale_y_continuous(trans='log10')+
-  theme_few()+
-  theme(axis.text.x=element_text(angle=90, hjust=1),
-        axis.ticks.x=element_blank(),
-        legend.position = "none")+
-  scale_fill_manual(values= palette2)+
-  labs(x="", y="")+ ylim(0,1000)
-
-# IMAGING ----
-# question: how much of our collection is imaged, and when did we do it?
-# how much of a contribution has the past year been?
-head(ims) # imaging data; useful columns = coreID, 
-colnames(ims)
-length(unique(ims$coreid)) # coreid is each specimen unique ID in symbiota; 13473 specimens
-unique(ims$format) # format is what it is
-unique(ims$type) # everything has same type
-unique(ims$subtype) # everythign has same subtype
-unique(ims$creator) # who put image there
-unique(ims$MetadataDate) # date image got uploaded?
-unique(ims$metadataLanguage) # everything in english
-
-# THE COLLECTION ====
-head(dat) #normal cch2 table display
+# clean dat ----
+## what are the columns ----
+head(dat, 10) #normal cch2 table display
 a=colnames(dat)
 # needed columns (after much exploration)
 # id (short symbiota id) or occurrence ID (huge unique id) = for everything in cch2
@@ -166,46 +68,274 @@ a=colnames(dat)
 # recordEnteredBy = who put this in CCH2
 # modified = NOT when it got entered; some of these weirdly all have same number
 
-a[103]
-head(unique(dat$recordEnteredBy),10)
-length(unique(dat$recordEnteredBy))
-head(unique((dat%>%filter(county=="Santa Cruz"))$recordEnteredBy))
+a[103] # look at 1 of the 103 variables
+head(unique(dat$recordEnteredBy),10) # loot at column info
+length(unique(dat$recordEnteredBy)) # check how many there are; types of things in the column
+head(unique((dat%>%filter(county=="Santa Cruz"))$recordEnteredBy)) # look at column for just Santa Cruz
 
-
-dat %>% mutate(barc=ifelse(is.na(catalogNumber), "nobarc","barc")) %>%
-  group_by(barc) %>% summarize(N=n()) # 13958 of records in here have barcodes, only 13950 are unique...; 2880 not barcoded, what's with those ones?
-
-dat %>% mutate(barc=ifelse(is.na(catalogNumber), "nobarc","barc")) %>%
-  filter(barc=="nobarc") %>% group_by(disposition) %>% summarize(N=n())
-
-
-
-
-
-
-length(unique(dat$id)) # 16838 specimens in here = this is close to CCH2 = 17300
-length(unique(dat$recordID)) # 16838 unique records
-length(unique(dat$collID)) # all part of UCSC collection
+## summary ----
+length(unique(dat$id)) # 16838 specimens in here? = this is close to CCH2 = 17300; this includes ones missing barcodes
+length(unique(dat$recordID)) # 16838 unique records; Al says this is double counting barcodes/unlinked images/etc
+length(unique(dat$scientificName)) # 3574 species (different from ids)
+length(unique(dat$genus)) # 832 genera (2 more than ids)
+length(unique(dat$family)) # 249 families double counting, many typos...
+length(unique(dat$catalogNumber)) # 13950 barcodes?
+is.na(dat$catalogNumber)
+max(dat$catalogNumber)
+length(unique(dat$collID)) # all 1 = all part of UCSC collection
 length(unique(dat$recordEnteredBy)) # 135 users working on this; show how many are students we've engaged! = all has a list
 length(unique(dat$disposition)) # 109 projects part of... ? this isn't clean; Al said that these are stuff he's used for batch uploads, when Sys bot classes wanted their data in. A
 length(unique(dat$recordedBy)) # collectors; some typos and dupes/misc notes
 length(unique(dat$countryCode)) # probably groups country better than typoed slot.
 length(unique(dat$country)) # USA US United States United Stated - typos need to be consolidated
-unique(dat$typeStatus) # types of types = need to consolidate
-
-length(dat %>% filter(country=="United Arab Emirates")) # ummm..... Al said he'lll fix these maybe
-
-# FIX CALIFORNIA records; if you want CA counties need to filter first
-length(unique(dat$stateProvince)) # some typos = california Califoria California; some put a country in here, or locality or just. "State".
-
-length(unique(dat$family)) #249 families, many typos...
-length(unique(dat$scientificName)) # 3574 species (different from ids)
-length(unique(dat$genus)) # 832 genera (2 more than ids)
-
-
+unique(dat$typeStatus) # types of types = need to consolidate variations in capitalization/etc
 unique(dat$basisOfRecord) # only want PreservedSpecimen
-unique(dat$catalogNumber) #this is OUR barcode = NA does exist
 
+### state issues ----
+## if you want CA counties need to filter first
+length(unique(dat$stateProvince)) # some typos = california Califoria California; some put a country in here, or locality or just. "State".
+unique(dat$stateProvince) # issues = Fort Ord, United States, CA misspellings, "unknown"
+
+# someone put in "State" = for a specimen that is in the US
+dat %>% filter(stringr::str_detect(stateProvince,"United States|Fort Ord")) %>% select(id, catalogNumber, stateProvince, locality, county, recordedBy, recordEnteredBy)
+# fix UCSC100000240, UCSC100014453, UCSC100014661 (emma fixed in cch2 also); others are fine
+
+dat %>% filter(stringr::str_detect(stateProvince,"^(?i)c")) %>% # check anything that might be california
+  select(id, catalogNumber, stateProvince, locality, county, recordedBy, recordEnteredBy) %>% # only look at relevant columns to see if it actually is an issue
+  filter(!stringr::str_detect(stateProvince,"California|Connecticut|Colorado|Chihuahua"))# which ones are the issues (ignore correctly spelled CA, CT, CO, Chihuahua)
+# fix UCSC100002783, UCSC100014670 (emma fixed in cch2 also)
+
+### country issue ----
+head(dat %>% filter(stringr::str_detect(country,"United Arab Emirates"))%>% select(id, catalogNumber, stateProvince, locality, county, recordedBy, recordEnteredBy)) # ummm..... Al said he'll fix these maybe
+# fix UCSC100006158, UCSC100010927, UCSC100011068 = all should be United States; Emma fixed in CCH2
+
+### fix ----
+# BEFORE YOU LEAVE: double check these guys in here and CCH2
+# cch2 syntax: UCSC100000240,UCSC100014453,UCSC100014661,UCSC100002783,UCSC100014670,UCSC100006158,UCSC100010927,UCSC100011068
+dat %>% filter(stringr::str_detect(catalogNumber, 
+"UCSC100000240|UCSC100014453|UCSC100014661|UCSC100002783|UCSC100014670|UCSC100006158|UCSC100010927|UCSC100011068")) %>%
+  select(id, catalogNumber, country, stateProvince, county, locality, recordedBy, recordEnteredBy)
+
+# how to fix? go to Row Column and overwrite.
+
+# catalogNumber == UCSC100002783, stateProvince == California
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100002783"] # find the specific value for a given catalogNumber
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100002783"] <- "California"
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100002783"] # check it
+
+# catalogNumber == UCSC100000240, stateProvince == California
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100000240"] # find the specific value for a given catalogNumber
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100000240"] <- "California"
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100000240"] # check it
+
+# catalogNumber == UCSC100006158, country == United States 
+dat["country"][dat["catalogNumber"] == "UCSC100006158"] # find the specific value for a given catalogNumber
+dat["country"][dat["catalogNumber"] == "UCSC100006158"] <- "United States"
+dat["country"][dat["catalogNumber"] == "UCSC100006158"] # check it
+
+# catalogNumber == UCSC100010927, country == United States 
+dat["country"][dat["catalogNumber"] == "UCSC100010927"] # find the specific value for a given catalogNumber
+dat["country"][dat["catalogNumber"] == "UCSC100010927"] <- "United States"
+dat["country"][dat["catalogNumber"] == "UCSC100010927"] # check it
+
+# catalogNumber == UCSC100011068, country == United States 
+dat["country"][dat["catalogNumber"] == "UCSC100011068"] # find the specific value for a given catalogNumber
+dat["country"][dat["catalogNumber"] == "UCSC100011068"] <- "United States"
+dat["country"][dat["catalogNumber"] == "UCSC100011068"] # check it
+
+# catalogNumber == UCSC100014453, stateProvince == California
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014453"] # find the specific value for a given catalogNumber
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014453"] <- "California"
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014453"] # check it
+
+# catalogNumber == UCSC100014661, stateProvince == California, county == Monterey
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014661"] # find the specific value for a given catalogNumber
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014661"] <- "California"
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014661"] # check it
+dat["county"][dat["catalogNumber"] == "UCSC100014661"] # find the specific value for a given catalogNumber
+dat["county"][dat["catalogNumber"] == "UCSC100014661"] <- "Monterey"
+dat["county"][dat["catalogNumber"] == "UCSC100014661"] # check it
+
+# catalogNumber == UCSC100014670, stateProvince == California
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014670"] # find the specific value for a given catalogNumber
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014670"] <- "California"
+dat["stateProvince"][dat["catalogNumber"] == "UCSC100014670"] # check it
+
+
+dat %>% filter(stringr::str_detect(catalogNumber, 
+                                   "UCSC100000240|UCSC100014453|UCSC100014661|UCSC100002783|UCSC100014670|UCSC100006158|UCSC100010927|UCSC100011068")) %>%
+  select(id, catalogNumber, country, stateProvince, county, locality, recordedBy, recordEnteredBy)
+# IS EVERYTHING FIXED? if no, go back.
+
+## merge dat + ims ----
+# question: how much of our collection is imaged, and when did we do it?
+# how much of a contribution has the past year been?
+head(ims) # imaging data; useful columns = coreID, 
+colnames(ims); nrow(ims)
+length(unique(ims$coreid)) # coreid is each specimen unique ID in symbiota; 13473 specimens
+nrow(ims) # 13924 rows... some doubled coreids?
+unique(ims$format) # format is what it is
+unique(ims$type) # everything has same type
+unique(ims$subtype) # everythign has same subtype
+unique(ims$creator) # who put image there
+unique(ims$MetadataDate) # date image got uploaded?
+unique(ims$metadataLanguage) # everything in english
+
+a=unique(dat$id); a=as.character(a); length(a)
+b=unique(ims$coreid); b=as.character(b); length(b)
+sum(a %in% b) # 13473 out of 13924 -- NOT all ims ids exist in dat; but maybe should be ok to merge with some gaps;
+nrow(ims %>% group_by(coreid) %>% summarize(N=n()) %>% filter(N>2)) # 361 coreids doubled; some tripled?
+(length(unique(ims$coreid)) + 361)==nrow(ims) # there are still more rows than doubles..... am i doing my math right?
+
+ims2 = ims %>% select(coreid, subtype, creator, MetadataDate, associatedSpecimenReference); head(ims2)
+ims2 = ims2 %>% mutate(ref = sapply(strsplit(associatedSpecimenReference, 
+                                      "https://cch2.org/portal/collections/individual/index.php?occid=",TRUE),
+                       function(x) (x[2])))
+ims2$associatedSpecimenReference[1]
+ims2$ref[1]
+head(ims2)
+nrow(ims2)==sum(ims2$coreid %in% ims2$ref)
+
+# Get ready to HASHMAPPPPP ----
+# see > hashmap.R for instructions and brainstorming
+
+#rename dat id to coreid so we can merge dat and ims
+dat = dat %>%
+  rename("coreid" = "id")
+colnames(dat)[1] #check that it worked
+dat["coreid"][dat["coreid"] == "229483"]
+ims["coreid"][ims["coreid"] == "229483"]
+
+# merge!!! 
+cch2=full_join(x=dat,y=ims,by="coreid") # saying, merge dat to id using coreid column
+head(cch2)
+colnames(dat)
+colnames(ims)
+colnames(cch2)
+nrow(dat)-nrow(ims)
+
+# filtered ----
+# barcoded only stuff
+nrow(cch2) # 16838 occurences, but not all have barcodes
+
+length(unique(dat$catalogNumber)) #this is OUR barcode = NA does exist; so only 13949 are unique...
+
+dat2= dat %>% # make new df
+  filter(!is.na(catalogNumber)) # filter out occurrences with no barcode entered
+
+nrow(dat2) # count; 13958 of records in here have barcodes; 2880 not barcoded
+
+
+## visualizations-----
+ggplot(dat2, aes(x=modified))+ # histogram?
+  geom_density(col="darkgreen")+
+  theme_few()+
+  theme(legend.position = "none")+
+  labs(x="When IDENTIFICATION last updated (errors)", y="Density of Specimens")+
+  scale_y_continuous(labels = comma)
+
+nrow(dat) # 16838 specimens
+g = dat %>%  group_by(family) %>%  # group by family; get amount of specimens per fam
+        summarize(N=n(), # how many specimens of each genera do we have
+                  prop=N/16838) # what proportion of our entire collection is that?
+nrow(g) # 830 genera
+head(g)
+g2 = g %>% filter(N > 100) %>% na.omit()
+
+sum(g$prop) # should be 1?
+sum(g2$prop) # genera w > 100 specimens are 26% of collection
+length(unique(g2$genus)) # theres 22 of them
+unique(g2$genus)
+
+### palettes 
+palette1 = c("Arctostaphylos" = "#621B00",
+             "Lupinus" = "#14248A",
+             "Quercus" = "#99C1B9",
+             "Trifolium" = "#D4C2FC",
+             "Lasthenia"="#ba693b",
+             "Bromus"="#f0d9Fd")
+
+palette3= c("Asteraceae"="#ea693b",
+            "Fabaceae"="#7e9d06",
+            "Poaceae"="#8f72ff") # for family breakdown
+
+## plotting ----
+### families ----
+ggplot(g, aes(x="", y=prop, fill=family)) +# pie chart of families
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+ # makes it circular?
+  theme_void()+theme(legend.position = "none")+
+  #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
+  scale_fill_manual(values=palette3)
+
+ggplot(g2, aes(x=family, y=N, fill=family))+ # bar chart of families
+  geom_col()+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  scale_fill_manual(values= palette3)+
+  labs(x="", y="") + ylim(0,2500)
+
+#### asters only ----
+g2 %>% filter(family=="Asteraceae")
+asters = dat %>% filter(family=="Asteraceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/16838, # how much of whole collection is that
+            propAsters=N/1693) # how much of just Asteraceae is that genera
+nrow(asters) # 136 taxa, 1 NA group
+
+ggplot(asters, aes(x=genus, y=N))+
+  geom_col(fill="#ea693b")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1, size=3),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="") + ylim(0,110)
+
+#### legumes only ----
+g2 %>% filter(family=="Fabaceae")
+legumes = dat %>% filter(family=="Fabaceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/16838, # how much of whole collection is that
+            propLegumes=N/2297) # how much of just Asteraceae is that genera
+nrow(legumes) # 30 taxa, 1 NA group
+
+ggplot(legumes, aes(x=genus, y=N))+
+  geom_col(fill="#7e9d06")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="") + ylim(0,1500)
+
+#### grasses only ----
+g2 %>% filter(family=="Poaceae")
+grass = dat %>% filter(family=="Poaceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/16838, # how much of whole collection is that
+            propGrass=N/1236) # how much of just Poaceae is that genera
+nrow(grass) #79 taxa, 1 NA group
+
+ggplot(grass, aes(x=genus, y=N))+
+  geom_col(fill="#8f72ff")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1, size=6),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="") + ylim(0,150)
+
+## other SC only ----
 
 ggplot(dat, aes(x=modified))+
   geom_density(col="darkgreen")+
@@ -213,9 +343,7 @@ ggplot(dat, aes(x=modified))+
   theme(legend.position = "none")+
   labs(x="When OCCURENCE last updated", y="density")
 
-
-
-
+# Look at just SC County Pressed Specimens
 santacruz = dat %>% filter(basisOfRecord=="PreservedSpecimen") %>%
   filter(county=="Santa Cruz") %>%
   group_by(genus)
@@ -232,7 +360,7 @@ ggplot(santacruz, aes(x=family))+
 
 # how has collection changed over time
 # year = year specimen collected
-# modified = time we entered it in CCH2
+# modified = time we entered it in CCH2 (THIS ISNT TRUE, WRONG INFO)
 scTime = santacruz %>% group_by(modified) %>% summarize(N=n()) # modified is actually the wrong metric...
 
 ggplot(scTime, aes(x=modified, y=N))+
@@ -241,18 +369,15 @@ ggplot(scTime, aes(x=modified, y=N))+
   scale_y_continuous(trans='log10') # all time
 
 str(scTime)
-santacruz$date = format(santacruz$modified, "%Y-%m-%d")
-santacruz$month = format(santacruz$modified, "%Y-%m")
-scTime = santacruz %>% group_by(month) %>% summarize(N=n())
+santacruz$moddate = format(santacruz$modified, "%Y-%m-%d")
+santacruz$modmonth = format(santacruz$modified, "%Y-%m")
+scTime = santacruz %>% group_by(modmonth) %>% summarize(N=n())
 
-ggplot(scTime, aes(x=month, y=N))+
-  geom_point()+geom_line()+
+ggplot(scTime, aes(x=modmonth, y=N))+
+  geom_point()+
   theme_few()+
   scale_y_continuous(trans='log10')+
   theme(axis.text.x=element_text(angle=45, hjust=1, size=9),
         axis.ticks.x=element_blank())
 
-min(santacruz$modified); max(santacruz$modified) # started doing data in 2016
-
-# recordedBy = Collector
-# typeStatus = is this a type specimen?
+min(santacruz$modified); max(santacruz$modified) # started doing data in 2016?
