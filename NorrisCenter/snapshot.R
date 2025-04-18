@@ -224,7 +224,21 @@ dat2= dat %>% # make new df
   filter(!is.na(catalogNumber)) # filter out occurrences with no barcode entered
 
 nrow(dat2) # count; 13958 of records in here have barcodes; 2880 not barcoded
+length(unique(dat2$catalogNumber)) # 13948 cat numbers
+length(unique(dat2$id)) # 13949 IDS --- cat number with two ids? - multiple duplicates; nrow = 13957
 
+colnames(dat2)
+dat2 = dat2 %>% select(id, catalogNumber, recordedBy, eventDate, year, month, day, 
+                       family, scientificName, genus, specificEpithet, dateIdentified, identifiedBy, typeStatus, basisOfRecord, 
+                       country, stateProvince, county, municipality, locality, decimalLatitude, decimalLongitude,
+                       recordEnteredBy, modified); head(dat2, 10)
+dat2= dat2 %>% filter(catalogNumber !="TEST")
+head(dat2,10)
+dat2 %>% filter(catalogNumber == str_detect(dat2$catalogNumber, " "))
+
+dat2$year = replace(dat2$year, dat2$year == 1076, 1976)
+str(dat2)
+dat2$eventDate = replace(dat2$eventDate, dat2$eventDate == "1076-12-21", "1976-12-21")
 
 ## visualizations-----
 ggplot(dat2, aes(x=modified))+ # histogram?
@@ -234,26 +248,38 @@ ggplot(dat2, aes(x=modified))+ # histogram?
   labs(x="When IDENTIFICATION last updated (errors)", y="Density of Specimens")+
   scale_y_continuous(labels = comma)
 
-nrow(dat) # 16838 specimens
-g = dat %>%  group_by(family) %>%  # group by family; get amount of specimens per fam
+nrow(dat) # 16838 specimens in total collection
+f = dat2 %>%  group_by(family) %>%  # group by family; get amount of specimens per fam
         summarize(N=n(), # how many specimens of each genera do we have
                   prop=N/16838) # what proportion of our entire collection is that?
-nrow(g) # 830 genera
+nrow(f) # 183 families barcoded
+head(f)
+f2 = f %>% filter(N > 100) %>% na.omit()
+
+sum(f$prop) # should be 1? == 83% of collection is barcoded
+sum(f2$prop) # barcoded families w > 100 specimens are 62% of collection
+length(unique(f2$family)) # theres 24 fams with >100 occ. out of the 183 families
+unique(f2$family)
+
+g = dat2 %>%  group_by(genus) %>%  # group by family; get amount of specimens per fam
+  summarize(N=n(), # how many specimens of each genera do we have
+            prop=N/16838) # what proportion of our entire collection is that?
+nrow(g) # 793 genera barcoded
 head(g)
 g2 = g %>% filter(N > 100) %>% na.omit()
 
-sum(g$prop) # should be 1?
-sum(g2$prop) # genera w > 100 specimens are 26% of collection
-length(unique(g2$genus)) # theres 22 of them
+sum(g$prop) # should be 1? == 0.8288989 of collection is barcoded
+sum(g2$prop) # barcoded genera w > 100 specimens are 27% of collection
+length(unique(g2$genus)) # theres 22 genera >100 occ.
 unique(g2$genus)
 
 ### palettes 
-palette1 = c("Arctostaphylos" = "#621B00",
+palette1 = c("Arctostaphylos" = "#5B2333",
              "Lupinus" = "#14248A",
-             "Quercus" = "#99C1B9",
-             "Trifolium" = "#D4C2FC",
-             "Lasthenia"="#ba693b",
-             "Bromus"="#f0d9Fd")
+             "Quercus" = "#FBB13C",
+             "Trifolium" = "#417B5A",
+             "Lasthenia"="#F24333",
+             "Bromus"="#BAA5FF")
 
 palette3= c("Asteraceae"="#ea693b",
             "Fabaceae"="#7e9d06",
@@ -261,14 +287,14 @@ palette3= c("Asteraceae"="#ea693b",
 
 ## plotting ----
 ### families ----
-ggplot(g, aes(x="", y=prop, fill=family)) +# pie chart of families
+ggplot(f, aes(x="", y=prop, fill=family)) +# pie chart of families
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+ # makes it circular?
   theme_void()+theme(legend.position = "none")+
   #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
   scale_fill_manual(values=palette3)
 
-ggplot(g2, aes(x=family, y=N, fill=family))+ # bar chart of families
+ggplot(f2, aes(x=family, y=N, fill=family))+ # bar chart of families
   geom_col()+
   #scale_y_continuous(trans='log10')+
   theme_few()+
@@ -278,8 +304,26 @@ ggplot(g2, aes(x=family, y=N, fill=family))+ # bar chart of families
   scale_fill_manual(values= palette3)+
   labs(x="", y="") + ylim(0,2500)
 
+### genera ----
+ggplot(g, aes(x="", y=prop, fill=genus)) +# pie chart of families
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+ # makes it circular?
+  theme_void()+theme(legend.position = "none")+
+  #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
+  scale_fill_manual(values=palette1)
+
+ggplot(g2, aes(x=genus, y=N, fill=genus))+ # bar chart of families
+  geom_col()+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  scale_fill_manual(values= palette1)+
+  labs(x="", y="")
+
 #### asters only ----
-g2 %>% filter(family=="Asteraceae")
+f2 %>% filter(family=="Asteraceae")
 asters = dat %>% filter(family=="Asteraceae") %>%
   group_by(genus) %>% 
   summarize(N=n(), # how many specimens of each genera do we have
@@ -298,7 +342,7 @@ ggplot(asters, aes(x=genus, y=N))+
   labs(x="", y="") + ylim(0,110)
 
 #### legumes only ----
-g2 %>% filter(family=="Fabaceae")
+f2 %>% filter(family=="Fabaceae")
 legumes = dat %>% filter(family=="Fabaceae") %>%
   group_by(genus) %>% 
   summarize(N=n(), # how many specimens of each genera do we have
@@ -317,7 +361,7 @@ ggplot(legumes, aes(x=genus, y=N))+
   labs(x="", y="") + ylim(0,1500)
 
 #### grasses only ----
-g2 %>% filter(family=="Poaceae")
+f2 %>% filter(family=="Poaceae")
 grass = dat %>% filter(family=="Poaceae") %>%
   group_by(genus) %>% 
   summarize(N=n(), # how many specimens of each genera do we have
@@ -345,20 +389,125 @@ ggplot(dat, aes(x=modified))+
 
 # Look at just SC County Pressed Specimens
 santacruz = dat %>% filter(basisOfRecord=="PreservedSpecimen") %>%
-  filter(county=="Santa Cruz") %>%
-  group_by(genus)
-length(unique(santacruz$family)) # 598 genera from SC County; 7711 specimens
+  filter(county=="Santa Cruz")
+length(unique(santacruz$genus)) # 598 genera from SC County; 7711 specimens
+length(unique(santacruz$family)) # 219 families from SC County; 7711 specimens
+nrow(santacruz)
 colnames(santacruz)
 
-ggplot(santacruz, aes(x=family))+
+ggplot(santacruz, aes(x=family, fill=family))+
   geom_bar()+
   scale_y_continuous(trans='log10')+
   theme_few()+
   theme(axis.text.x=element_text(angle=90, hjust=1, size=2),
         axis.ticks.x=element_blank(),
-        legend.position = "none")
+        legend.position = "none")+scale_fill_manual(values=palette3)
 
-# how has collection changed over time
+### families ----
+f3 = santacruz %>% group_by(family) %>%  # group by family; get amount of specimens per fam
+  summarize(N=n(), # how many specimens of each family do we have
+            prop=N/7711) # how much within our santa cruz collection is that
+
+ggplot(f3, aes(x="", y=prop, fill=family)) +# pie chart of families
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+ # makes it circular?
+  theme_void()+theme(legend.position = "none")+
+  #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
+  scale_fill_manual(values=palette3)
+
+f4 = f3 %>% filter(N > 100) %>% na.omit()
+ggplot(f4, aes(x=family, y=N, fill=family))+ # bar chart of families
+  geom_col()+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  scale_fill_manual(values= palette3)+
+  labs(x="", y="")
+
+### genera ----
+g3 = santacruz %>% group_by(genus) %>%  # group by genus; get amount of specimens per fam
+  summarize(N=n(), # how many specimens of each genera do we have
+            prop=N/7711) # how much within our santa cruz collection is that
+
+ggplot(g3, aes(x="", y=prop, fill=genus)) +# pie chart of families
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)+ labs(x=NULL,y=NULL, fill=NULL)+ # makes it circular?
+  theme_void()+theme(legend.position = "none")+
+  #geom_text(aes(label = paste(N, genus)), position = position_stack(vjust=0.5), size=1)+
+  scale_fill_manual(values=palette1)
+
+g4 = g3 %>% filter(N > 50) %>% na.omit()
+ggplot(g4, aes(x=genus, y=N, fill=genus))+ # bar chart of families
+  geom_col()+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  scale_fill_manual(values= palette1)+
+  labs(x="", y="")
+
+#### asters only ----
+f4 %>% filter(family=="Asteraceae")
+asters2 = santacruz %>% filter(family=="Asteraceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/7711, # how much of whole collection is that
+            propAsters=N/837) # how much of just Asteraceae is that genera
+nrow(asters2) # 90 taxa, 1 NA group
+
+ggplot(asters2, aes(x=genus, y=N))+
+  geom_col(fill="#ea693b")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1, size=3),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="")
+
+#### legumes only ----
+f4 %>% filter(family=="Fabaceae")
+legumes2 = santacruz %>% filter(family=="Fabaceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/7711, # how much of whole collection is that
+            propLegumes=N/723) # how much of just Asteraceae is that genera
+nrow(legumes2) # 21 taxa, 1 NA group
+
+ggplot(legumes2, aes(x=genus, y=N))+
+  geom_col(fill="#7e9d06")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="")
+
+#### grasses only ----
+f4 %>% filter(family=="Poaceae")
+grass2 = santacruz %>% filter(family=="Poaceae") %>%
+  group_by(genus) %>% 
+  summarize(N=n(), # how many specimens of each genera do we have
+            propWhole=N/7711, # how much of whole santa cruz coll is that
+            propGrass=N/624) # how much of just Poaceae is that genera
+nrow(grass2) #63 taxa, 1 NA group
+
+ggplot(grass2, aes(x=genus, y=N))+
+  geom_col(fill="#8f72ff")+
+  #scale_y_continuous(trans='log10')+
+  theme_few()+
+  theme(axis.text.x=element_text(angle=90, hjust=1, size=6),
+        axis.ticks.x=element_blank(),
+        legend.position = "none")+
+  #scale_fill_manual(values= palette2)+
+  labs(x="", y="")
+
+
+## how has collection changed over time ----
 # year = year specimen collected
 # modified = time we entered it in CCH2 (THIS ISNT TRUE, WRONG INFO)
 scTime = santacruz %>% group_by(modified) %>% summarize(N=n()) # modified is actually the wrong metric...
