@@ -1,8 +1,9 @@
 # Norris Center Snapshot | Emma Yockman
 # 8 Apr 2025
-rm(list=ls())
-lapply(c("tidyverse","ggpubr","ggthemes","patchwork","rmarkdown","scales","tidyverse","GGally"),require,character.only=T)
-setwd("~/Documents/Coding/educational/NorrisCenter/Apr8norriscentersnapshot")
+
+rm(list=ls()) # clear R's brain
+lapply(c("tidyverse","ggpubr","ggthemes","patchwork","rmarkdown","scales","tidyverse","GGally"),require,character.only=T) # load in packages in bulk
+setwd("~/Documents/Coding/educational/NorrisCenter/Apr8norriscentersnapshot") # set working directory
 
 # DATA EXPLORATION ----
 # what is this?
@@ -19,15 +20,19 @@ dat=read_csv("occurrences.csv") # warning; I think this is all raw data of every
 
 # shared info across all datasets:
 ## coreid = symbiota's unique identifier (dat has "id" which i think is coreid)
-length(intersect(colnames(ims), colnames(dat))) # nothing shared... (id is coreid?)
+length(intersect(colnames(ims), colnames(dat))) # see if there are any matches in column names
+# nothing shared... (id is coreid?)
 
-head(dat %>% select(id, genus, specificEpithet, taxonRank, infraspecificEpithet, recordID, modified), 10)
+head(dat %>% # show me first 10 rows of data if you only look at these columns
+       select(id, genus, specificEpithet, taxonRank, 
+              infraspecificEpithet, recordID, modified), 10) 
 
 # clean dat ----
 ## what are the columns ----
 head(dat, 10) #normal cch2 table display
-a=colnames(dat)
-# needed columns (after much exploration)
+a=colnames(dat) # make column names an object so i can explore them easier
+
+### needed columns (after much exploration) ----
 # id (short symbiota id) or occurrence ID (huge unique id) = for everything in cch2
 # basisOfRecord = is it pressed or not
 # catalogNumber = 13950 have been barcoded, this isn't all specimens in cch2
@@ -68,8 +73,8 @@ a=colnames(dat)
 # recordEnteredBy = who put this in CCH2
 # modified = NOT when it got entered; some of these weirdly all have same number
 
-a[103] # look at 1 of the 103 variables
-head(unique(dat$recordEnteredBy),10) # loot at column info
+a[103] # look at 1 of the 103 column names; can enter any number 1 through 103 here
+head(unique(dat$recordEnteredBy),10) # loot at that column's info
 length(unique(dat$recordEnteredBy)) # check how many there are; types of things in the column
 head(unique((dat%>%filter(county=="Santa Cruz"))$recordEnteredBy)) # look at column for just Santa Cruz
 
@@ -80,8 +85,8 @@ length(unique(dat$scientificName)) # 3574 species (different from ids)
 length(unique(dat$genus)) # 832 genera (2 more than ids)
 length(unique(dat$family)) # 249 families double counting, many typos...
 length(unique(dat$catalogNumber)) # 13950 barcodes?
-is.na(dat$catalogNumber)
-max(dat$catalogNumber)
+is.na(dat$catalogNumber) # are there any NAs
+max(dat$catalogNumber) # largest catalog number
 length(unique(dat$collID)) # all 1 = all part of UCSC collection
 length(unique(dat$recordEnteredBy)) # 135 users working on this; show how many are students we've engaged! = all has a list
 length(unique(dat$disposition)) # 109 projects part of... ? this isn't clean; Al said that these are stuff he's used for batch uploads, when Sys bot classes wanted their data in. A
