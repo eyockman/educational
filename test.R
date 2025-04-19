@@ -2,14 +2,15 @@ rm(list=ls())
 library(ggplot2)
 
 frog = read.csv("~/Documents/Coding/educational/test.csv")
-head(frog)
+head(frog, 10)
+colnames(frog)
 
 ggplot(frog, aes(x=species, y=height, color=species)) +
   geom_boxplot() +
   theme_bw()
 
 # compare heights of these three species (using ANOVA)
-height_comparison=aov(height~species, data=data)
+height_comparison=aov(height~species, data=frog)
 summary(height_comparison) # p = 0.0273 , the species are significantly different!
 
 # post hoc test to determine which ones are different (we'll use Tukey's for now)
