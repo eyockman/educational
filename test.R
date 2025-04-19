@@ -1,20 +1,22 @@
-rm(list=ls())
-library(ggplot2)
+rm(list=ls()) # clear R's brain
+library(ggplot2) # load in ggplot2 package. if you don't have it installed already it will fail
 
-frog = read.csv("~/Documents/Coding/educational/test.csv")
-head(frog, 10)
-colnames(frog)
+frog = read.csv("~/Documents/Coding/educational/test.csv") # load in test.csv and call it frog. you can call it whatever you want, I just chose to call it something weird so you would understand you can call it anything
+head(frog, 10) # look at first 10 rows
+colnames(frog) # look at column names
 
-ggplot(frog, aes(x=species, y=height, color=species)) +
-  geom_boxplot() +
-  theme_bw()
+# visualize your data
+ggplot(frog, aes(x=species, y=height, color=species)) + # draw a plot using frog, with species as the x axis, height as the y axis, and color code species
+  geom_boxplot() + # draw a box plot using the  specificiations from the last line
+  theme_bw() # use a cuter theme
 
 # compare heights of these three species (using ANOVA)
-height_comparison=aov(height~species, data=frog)
-summary(height_comparison) # p = 0.0273 , the species are significantly different!
+height_comparison=aov(height~species, data=frog) # using frog, are average heights different by species? put this analysis into an object called height_comparisons
+summary(height_comparison) # call results of the last line
+# p = 0.0273 , the species are significantly different! but this doesn't tell us which ones are different
 
 # post hoc test to determine which ones are different (we'll use Tukey's for now)
-TukeyHSD(height_comparison)
+TukeyHSD(height_comparison) # compare means of each species directly
 
 # output
 # $species
