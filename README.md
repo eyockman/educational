@@ -3,8 +3,6 @@
 
 FOLDERS ❀
 
-- **BIOE107** = code from UCSC BIOE107 course I am TAing; code written by A. Marm Kilpatrick
-
 - **lit review** = data downloaded from Web of Science search when I was looking for publications mentioning competition and facilitation in Ecology; makes a nice plot
 
 - **NorrisCenter** = data from CCH2; planning to use for collection summary statistics 
