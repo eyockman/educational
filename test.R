@@ -1,5 +1,6 @@
 rm(list=ls()) # clear R's brain
 library(ggplot2) # load in ggplot2 package. if you don't have it installed already it will fail
+library(ggthemes) # cute themes packages
 
 frog = read.csv("~/Documents/Coding/educational/test.csv") # load in test.csv and call it frog. you can call it whatever you want, I just chose to call it something weird so you would understand you can call it anything
 head(frog, 10) # look at first 10 rows

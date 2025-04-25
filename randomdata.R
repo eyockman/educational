@@ -1,5 +1,6 @@
 rm(list=ls()) # clear R's brain
 library(ggplot2) # load in ggplot2 package
+library(ggthemes) # cute themes packages
 
 water=rnorm(100, 0, 0.5) # randomly generate a list of 100 numbers with an average of 0 and a standard deviation of 0.5. Call it "water"
 grubs=water*rnorm(100, 5, 3)+20 # randomly generate a list of 100 numbers with an average of 5, std dev of 3, but multiply every number by water and add 20
