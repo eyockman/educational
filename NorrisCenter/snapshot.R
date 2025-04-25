@@ -429,7 +429,7 @@ ggplot(f4, aes(x=family, y=N, fill=family))+ # bar chart of families
         axis.ticks.x=element_blank(),
         legend.position = "none")+
   scale_fill_manual(values= palette3)+
-  labs(x="", y="")
+  labs(x="", y="", title="Families in Santa Cruz County with >100 Specimens")
 
 ### genera ----
 g3 = santacruz %>% group_by(genus) %>%  # group by genus; get amount of specimens per fam
