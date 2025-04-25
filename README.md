@@ -3,8 +3,6 @@
 
 FOLDERS ❀
 
-- **BIOE107** = code from UCSC BIOE107 course I am TAing; code written by A. Marm Kilpatrick
-
 - **lit review** = data downloaded from Web of Science search when I was looking for publications mentioning competition and facilitation in Ecology; makes a nice plot
 
 - **NorrisCenter** = data from CCH2; planning to use for collection summary statistics 
@@ -28,6 +26,7 @@ UNSORTED FILES ❀
 
 Other Great R Resources ❀
 - https://www.statology.org/
+- https://www.bigbookofr.com/ = has a "New to R?" chapter!
 - https://rforcats.net/
 - SCRUBs = Santa Cruz R User Base group (UCSC folks only: see EEB email listservs)
 - R cheatsheets (you can find these when you search for specific packages; e.g. dplyr, ggplot2)
