@@ -8,7 +8,7 @@ Data is sourced from CCH2.org (2025 CCH2.org, Accessed 8 Apr) and Al Keuter.
 
 ## Files
 
-- **> Apr8norriscentersnapshot** = folder full of data downloaded directly from [CCH2.org](https://www.cch2.org/portal/collections/search/index.php)
+- **> Apr8norriscentersnapshot** = folder full of data downloaded directly from [CCH2.org](https://www.cch2.org/portal/collections/search/index.php) on 8 Apr 2025. Data is only from the UCSC Collection.
 
 - **.gitignore** = ignore this its a github thing (you dont need to download it)
 
