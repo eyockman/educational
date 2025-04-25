@@ -36,7 +36,7 @@ Packages used: [`r2r`](https://cran.r-project.org/web/packages/r2r/index.html), 
 
 
 
-Other Great R Resources ❀
+### Other Great R Resources ❀
 - https://www.statology.org/
 - https://www.bigbookofr.com/ = has a "New to R?" chapter!
 - https://rforcats.net/
