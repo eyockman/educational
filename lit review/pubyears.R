@@ -1,12 +1,10 @@
 rm(list=ls()) # clear R's brain
-lapply(c("ggthemes","tidyverse","viridis",
-         "ggplot2","cowplot","lme4",
-         "grid","ggrepel","multcomp","emmeans"),require,character.only=T) # load in packages all in one function!
+lapply(c("ggthemes","tidyverse","ggplot2"),require,character.only=T) # load in packages all in one function!
 
-f=read_csv("~/Documents/Science/facil-wos.csv"); head(f) # read in facilitation pubs dataset using file path - the ";" runs that line, then runs head(f) next
+f=read_csv("~/Documents/Coding/educational/lit review/facil-wos.csv"); head(f) # read in facilitation pubs dataset using file path - the ";" runs that line, then runs head(f) next
 f = f %>% rename_at(vars(c("Count")), ~ c("Fcount")) # rename a column
 
-c=read_csv("~/Documents/Science/comp-wos.csv"); head(c) # read in competition pubs dataset using file path - the ";" runs that line, then runs head(c) next
+c=read_csv("~/Documents/Coding/educational/lit review/comp-wos.csv"); head(c) # read in competition pubs dataset using file path - the ";" runs that line, then runs head(c) next
 c = c %>% rename_at(vars(c("Count")), ~ c("Ccount")) # rename a column
 
 j=full_join(f, c); head(j) # join two datasets together!
