@@ -33,5 +33,8 @@ Other Great R Resources ❀
 - https://www.bigbookofr.com/ = has a "New to R?" chapter!
 - https://rforcats.net/
 - SCRUBs = Santa Cruz R User Base group (UCSC folks only: see EEB email listservs)
+    - check out [their github here](https://github.com/tanyalrogers/SCRUBS_UCSC)
 - R cheatsheets (you can find these when you search for specific packages; e.g. dplyr, ggplot2)
+    - [ggplot2](https://github.com/rstudio/cheatsheets/blob/main/data-visualization-2.1.pdf)
+    - [dplyr](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf)
 - Greg Gilbert's Site: https://greggilbertlab.sites.ucsc.edu/teaching/rtransition/
