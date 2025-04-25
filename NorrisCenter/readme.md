@@ -4,7 +4,8 @@ This folder is for data pertaining to the Norris Center Herbarium [more here](ht
 
 The code here was created specifically for the Herbarium Student Curators to explore while they work on their poster presentations, but may be useful to anyone interested in working with large datasets.
 
-Data is sourced from CCH2.org (2025 CCH2.org, Accessed 8 Apr) and Al Keuter.
+Occurrence data published by: UCSC Herbarium, Kenneth S. Norris Center for Natural History (Accessed through
+CCH2 Portal Data Portal, https://cch2.org/portal/index.php, 2025-04-08)
 
 ## Files
 
