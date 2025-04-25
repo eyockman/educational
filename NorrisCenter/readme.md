@@ -4,9 +4,12 @@ This folder is for data pertaining to the Norris Center Herbarium [more here](ht
 
 The code here was created specifically for the Herbarium Student Curators to explore while they work on their poster presentations, but may be useful to anyone interested in working with large datasets.
 
+Occurrence data published by: UCSC Herbarium, Kenneth S. Norris Center for Natural History (Accessed through
+CCH2 Portal Data Portal, https://cch2.org/portal/index.php, 2025-04-08)
+
 ## Files
 
-- **> Apr8norriscentersnapshot** = folder full of data downloaded directly from [CCH2.org](https://www.cch2.org/portal/collections/search/index.php)
+- **> Apr8norriscentersnapshot** = folder full of data downloaded directly from [CCH2.org](https://www.cch2.org/portal/collections/search/index.php) on 8 Apr 2025. Data is only from the UCSC Collection.
 
 - **.gitignore** = ignore this its a github thing (you dont need to download it)
 
