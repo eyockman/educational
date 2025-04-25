@@ -28,7 +28,7 @@ Packages used: [`r2r`](https://cran.r-project.org/web/packages/r2r/index.html), 
     - Packages used: [`survival`](https://cran.r-project.org/web/packages/survival/index.html),  [`ranger`](https://cran.r-project.org/web/packages/ranger/index.html), [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html), [`dplyr`](https://cran.r-project.org/web/packages/dplyr/index.html), [`ggfortify`](https://cran.r-project.org/web/packages/ggfortify/index.html),  [`survminer`](https://cran.r-project.org/web/packages/survminer/index.html)
 - **test.R** = beginner code to show how to make a boxplot and do a basic ANOVA
     - Package used: [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html)
-- **test.csv** = made up data set showing some made up heights of 3 different genera (clarkia, raphanus, trifolium) to use in test.R
+- **test.csv** = made up data set showing some made up heights of 3 different genera (*Clarkia*, *Raphanus*, *Trifolium*) to use in test.R
 - **vision.R** = initial exploration of the retinopathy dataset in the survival package. prep for a survival curve mini workshop I gave to ESNERR staff. Comments pretty in depth.
     - Packages used: [`survival`](https://cran.r-project.org/web/packages/survival/index.html), [`dplyr`](https://cran.r-project.org/web/packages/dplyr/index.html), [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html), [`ggfortify`](https://cran.r-project.org/web/packages/ggfortify/index.html)
 - **vision_model.R** = follow up to vision.R, file used during workshop with ESNERR staff. Comments OK but leave a bit to be desired.
