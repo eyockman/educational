@@ -15,7 +15,7 @@ Packages used: [`r2r`](https://cran.r-project.org/web/packages/r2r/index.html), 
 
 ## UNSORTED FILES ❀
 
--**.gitignore** = don't worry about this
+- **.gitignore** = don't worry about this
 - **educational.Rproj** = this is just my workspace snapshot, don't worry about this either
 - **hashmap.R** = Mick walking me through hashmaps and using the hashmap tutorial on the package page
     - Package used: [`r2r`](https://cran.r-project.org/web/packages/r2r/index.html)
