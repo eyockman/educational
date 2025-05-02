@@ -8,7 +8,7 @@ library(ggplot2) # load in necessary packages. the ";" is a way to have more tha
 
 setwd("~/Documents/Coding/educational/NorrisCenter") # set folder I want to call files from
 
-al = read_excel("Al_data.xlsx") # call my file, name it "al"
+al = read_excel("Al_data_20250419CLEAN.xlsx") # call my file, name it "al"
 
 head(al) # look at the first few rows
 colnames(al) # look at column names
@@ -22,9 +22,8 @@ ggplot(data=al, (aes(x=DATE, y=IMAGE_LINKED))) + # make a blank plot using al da
   geom_line() # draw a line
 
 # show all types of data on the same graph ----
-
-al2 = al %>% # %>% is the pipe function, it's saying I want to use the select() function within my al dataset.
-  select(DATE, BARCODES_VISIBLE_IN_CCH2, DATA_RECORDS, DATA_RECORDS_W_ACCESSION_NO, IMAGE_LINKED, TOTAL_RECORDS, TOTAL_ALLSOURCES) #I am making a new dataset called al2 that only has these columns
+# %>% is the pipe function, it's saying I want to use the select() function within my al dataset.
+al2 = al %>% dplyr::select(DATE, BARCODES_VISIBLE_IN_CCH2, DATA_RECORDS, DATA_RECORDS_W_ACCESSION_NO, IMAGE_LINKED, TOTAL_RECORDS, TOTAL_ALLSOURCES) #I am making a new dataset called al2 that only has these columns
 
 
 al_long = pivot_longer(data=al2, # make a new dataset called al_long that does something called "pivot_longer" I can explain this more in depth, but basically it converts my columns to rows (kind of)
@@ -37,6 +36,8 @@ head(al_long) # look at the first few rows of my pivoted dataset
 
 ggplot(data=al_long, aes(x=DATE, y=counts, colour=count_type)) + # make a new plot using al_long where DATE is on the x axis and counts are on the y, but color code by count_type
   geom_line() # draw line
+
+al_long2 = al_long %>% filter(count_type!="")
 
 # make a more complicated graph ----
 
@@ -58,9 +59,10 @@ highlight_periods = data.frame( # make a dataset called highlight_periods and us
   upper = Inf, # positive infinity 
   highlightcolor ="lightgreen") # fill
 
-ggplot(data=al, aes(x=DATE, y=BARCODES_VISIBLE_IN_CCH2))+ # make plot using al data and set DATE as x axis and BARCODES VISIBLE... as y axis
+unique(al_long$count_type)
+ggplot(data=al, aes(x=DATE, y=TOTAL_ALLSOURCES))+ # make plot using al data and set DATE as x axis and BARCODES VISIBLE... as y axis
   geom_line()+ # draw line
-  ylim(0,16000)+ # set y axis limits manually
+  ylim(0,20000)+ # set y axis limits manually
   xlim(as.Date("2020-01-01"),highlight_periods$end)+ # set x axis limits manually (otherwise it chooses its own)
   geom_vline(xintercept=winqtr, linetype="solid", color="blue", linewidth=0.5)+ # draw a line at the day winter quarter started
   geom_rect(data = highlight_periods, # highlight part of the graph using my highlight_periods data fram
