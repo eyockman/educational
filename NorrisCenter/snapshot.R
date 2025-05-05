@@ -189,7 +189,7 @@ unique(ims$metadataLanguage) # everything in english
 a=unique(dat$id); a=as.character(a); length(a)
 b=unique(ims$coreid); b=as.character(b); length(b)
 sum(a %in% b) # 13473 out of 13924 -- NOT all ims ids exist in dat; but maybe should be ok to merge with some gaps;
-nrow(ims %>% group_by(coreid) %>% summarize(N=n()) %>% filter(N>2)) # 361 coreids doubled; some tripled?
+nrow(ims %>% group_by(coreid) %>% summarize(N=n()) %>% filter(N>1)) # (361 with duped ids) 324 coreids doubled; 17 tripled, 6 quadrupled, 5 ids quintupled, 8 with seven copies, 1 with 8 copies
 (length(unique(ims$coreid)) + 361)==nrow(ims) # there are still more rows than doubles..... am i doing my math right?
 
 ims2 = ims %>% select(coreid, subtype, creator, MetadataDate, associatedSpecimenReference); head(ims2)
@@ -202,7 +202,7 @@ head(ims2)
 nrow(ims2)==sum(ims2$coreid %in% ims2$ref)
 
 # Get ready to HASHMAPPPPP ----
-# see > hashmap.R for instructions and brainstorming
+# see > hashmap.R for instructions and brainstorming; this code is not complete
 
 #rename dat id to coreid so we can merge dat and ims
 dat = dat %>%
@@ -217,7 +217,7 @@ head(cch2)
 colnames(dat)
 colnames(ims)
 colnames(cch2)
-nrow(dat)-nrow(ims)
+nrow(dat)-nrow(ims) # 2914 not imaged that are in cch2?
 
 # filtered ----
 # barcoded only stuff
@@ -230,7 +230,7 @@ dat2= dat %>% # make new df
 
 nrow(dat2) # count; 13958 of records in here have barcodes; 2880 not barcoded
 length(unique(dat2$catalogNumber)) # 13948 cat numbers
-length(unique(dat2$id)) # 13949 IDS --- cat number with two ids? - multiple duplicates; nrow = 13957
+length(unique(dat2$coreid)) # 13949 IDS --- cat number with two ids? - multiple duplicates; nrow = 13957
 
 colnames(dat2)
 dat2 = dat2 %>% select(id, catalogNumber, recordedBy, eventDate, year, month, day, 
@@ -247,10 +247,10 @@ dat2$eventDate = replace(dat2$eventDate, dat2$eventDate == "1076-12-21", "1976-1
 
 ## visualizations-----
 ggplot(dat2, aes(x=modified))+ # histogram?
-  geom_density(col="darkgreen")+
+  geom_histogram(fill="darkgreen")+
   theme_few()+
   theme(legend.position = "none")+
-  labs(x="When IDENTIFICATION last updated (errors)", y="Density of Specimens")+
+  labs(x="When Occurence last updated (has errors)", y="Number of Specimens")+
   scale_y_continuous(labels = comma)
 
 nrow(dat) # 16838 specimens in total collection
