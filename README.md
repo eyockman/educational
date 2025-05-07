@@ -42,6 +42,7 @@ Packages used: [`r2r`](https://cran.r-project.org/web/packages/r2r/index.html), 
 - https://rforcats.net/
 - SCRUBs = Santa Cruz R User Base group (UCSC folks only: see EEB email listservs)
     - check out [their github here](https://github.com/tanyalrogers/SCRUBS_UCSC)
+    - and [Calvin's github](https://github.com/calvin-munson/R-DataScience-workshops/tree/master)
 - R cheatsheets (you can find these when you search for specific packages; e.g. dplyr, ggplot2)
     - [ggplot2](https://github.com/rstudio/cheatsheets/blob/main/data-visualization-2.1.pdf) cheatsheet
     - [dplyr](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf) cheatsheet
