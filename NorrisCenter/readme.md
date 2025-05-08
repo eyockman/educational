@@ -9,7 +9,7 @@ CCH2 Portal Data Portal, https://cch2.org/portal/index.php, 2025-04-08)
 
 ## Files
 
-- **> Apr8norriscentersnapshot** = folder full of data downloaded directly from [CCH2.org](https://www.cch2.org/portal/collections/search/index.php) on 8 Apr 2025. Data is only from the UCSC Collection.
+- Had to take down the "Apr8norriscentersnapshot" folder and .zip -- I didn't realize that CCH2 asks people not to distribute data! if you need it, email me or download it yourself from CCH2! the code I have shoudl still work for any date you download for, you may have to adjust dates on axes though, and numbers will likely be slightly different.
 
 - **.gitignore** = ignore this its a github thing (you dont need to download it)
 
