@@ -17,8 +17,6 @@ CCH2 Portal Data Portal, https://cch2.org/portal/index.php, 2025-04-08)
 
 - **Al_data_20250419.xlsx** = data provided by Al Keuter but updated on 19 Apr 2025
 
-- **Apr8norriscentersnapshot.zip** = zip file of the folder with the same name (may be easier to download)
-
 - **CCH2 Portal Data Usage Guidelines** = rules for using CCH2 data!
 
 - **al_data.R** = code exploring the the file Al_data.xlsx
